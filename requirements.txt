@@ -1,8 +1,9 @@
 fastapi
 uvicorn
-python-multipart
-sentence-transformers
-chromadb
+streamlit
 pypdf
-openai
-python-dotenv
+chromadb
+sentence-transformers
+requests
+python-multipart
+

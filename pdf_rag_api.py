@@ -3,12 +3,15 @@ from pypdf import PdfReader
 import chromadb
 from sentence_transformers import SentenceTransformer
 import requests
+import os
 
 app = FastAPI()
 
-API_KEY = "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"
+# OpenRouter API key from ENV
+API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
+
 client = chromadb.Client()
 collection = client.create_collection(name="pdf_docs")
 
@@ -25,12 +28,15 @@ def call_llm(context, question):
     data = {
         "model": "mistralai/mistral-7b-instruct",
         "messages": [
-            {"role": "system", "content": f"Use this info to answer: {context}"},
+            {"role": "system", "content": f"Answer using only this context:\n{context}"},
             {"role": "user", "content": question}
         ]
     }
 
     r = requests.post(url, headers=headers, json=data)
+
+    print("RAW RESPONSE:", r.text)
+
     return r.json()["choices"][0]["message"]["content"]
 
 @app.post("/upload")
@@ -52,7 +58,7 @@ async def upload_pdf(file: UploadFile = File(...)):
             ids=[str(i)]
         )
 
-    return {"status": "PDF processed and stored"}
+    return {"status": "PDF indexed"}
 
 @app.post("/ask")
 async def ask(question: str):
