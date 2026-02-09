@@ -2,7 +2,7 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 import requests
 
-API_KEY = "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"
+API_KEY = "open router key"
 
 # 1. Embedding model load
 model = SentenceTransformer("all-MiniLM-L6-v2")
