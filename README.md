@@ -67,6 +67,12 @@ PDF → Text Extraction → Embeddings → ChromaDB → LLM → Answer
 ### 📑 Swagger API Docs
 ![Swagger UI](swagger.png)
 
+## 🔮 Future Improvements
+- Multiple PDF upload
+- User authentication
+- Cloud deployment
+- Better chunking
+
 
 ## 👨‍💻 Author
 Ajay Sharma
