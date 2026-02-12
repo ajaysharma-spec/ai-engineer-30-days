@@ -59,6 +59,14 @@ http://localhost:8501
 PDF → Text Extraction → Embeddings → ChromaDB → LLM → Answer
 
 ---
+## 📸 Project Screenshots
+
+### 🖥 Streamlit Chat UI
+![Streamlit UI](streamlit.png)
+
+### 📑 Swagger API Docs
+![Swagger UI](swagger.png)
+
 
 ## 👨‍💻 Author
 Ajay Sharma
