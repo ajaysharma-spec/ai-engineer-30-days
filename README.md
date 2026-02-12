@@ -1,33 +1,64 @@
-# 📄 PDF RAG Chatbot (FastAPI + Chroma + LLM)
+# PDF RAG Chatbot
 
-This project is a production-style GenAI backend that allows users to upload a PDF and ask questions based on its content using Retrieval Augmented Generation (RAG).
+AI-powered PDF Question Answering System using Retrieval-Augmented Generation (RAG).
+
+---
 
 ## 🚀 Features
+- Upload PDF files
+- Extract text automatically
+- Convert text into embeddings
+- Store embeddings in ChromaDB
+- Ask questions about PDF
+- LLM generates contextual answers
+- Simple Streamlit Chat UI
 
-- FastAPI backend
-- PDF upload
-- Text embeddings using Sentence Transformers
-- Vector storage with ChromaDB
-- Similarity search
-- LLM-based answering
-- Swagger UI for testing
+---
 
-## 🧠 Architecture
-
-PDF → Embeddings → Chroma Vector DB → Similarity Search → LLM → Answer
-
-## 🛠 Tech Stack
-
+## 🧠 Tech Stack
 - Python
 - FastAPI
-- ChromaDB
 - Sentence Transformers
-- OpenRouter LLM API
+- ChromaDB
+- Streamlit
+- OpenRouter API
 
-## ▶ How to Run
+---
 
-```bash
+## ⚙️ Installation
+
+### 1️⃣ Create Virtual Environment
 python -m venv venv
-.\venv\Scripts\activate
-pip install fastapi uvicorn chromadb sentence-transformers pypdf python-multipart requests
+
+### 2️⃣ Activate
+venv\Scripts\activate
+
+### 3️⃣ Install Requirements
+pip install -r requirements.txt
+
+---
+
+## ▶️ Run Backend
 uvicorn pdf_rag_api:app --reload
+
+Open:
+http://127.0.0.1:8000/docs
+
+---
+
+## ▶️ Run Frontend
+streamlit run ui.py
+
+Open:
+http://localhost:8501
+
+---
+
+## 🔄 Project Workflow
+
+PDF → Text Extraction → Embeddings → ChromaDB → LLM → Answer
+
+---
+
+## 👨‍💻 Author
+Ajay Sharma
