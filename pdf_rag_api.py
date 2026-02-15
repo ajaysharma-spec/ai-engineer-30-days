@@ -4,6 +4,8 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 import requests
 import os
+from chromadb.config import Settings
+
 
 app = FastAPI()
 
@@ -12,7 +14,10 @@ API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-client = chromadb.Client()
+client = chromadb.Client(
+    settings=Settings(anonymized_telemetry=False)
+)
+
 collection = client.create_collection(name="pdf_docs")
 
 def call_llm(context, question):
