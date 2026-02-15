@@ -1,3 +1,9 @@
+import os
+os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
+
+import pydantic
+pydantic.VERSION = "2"
+
 from fastapi import FastAPI, UploadFile, File
 from pypdf import PdfReader
 import chromadb
@@ -5,8 +11,7 @@ from sentence_transformers import SentenceTransformer
 import requests
 import os
 from chromadb.config import Settings
-import pydantic
-pydantic.VERSION = "2"
+
 
 
 
