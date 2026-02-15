@@ -5,6 +5,9 @@ from sentence_transformers import SentenceTransformer
 import requests
 import os
 from chromadb.config import Settings
+import pydantic
+pydantic.VERSION = "2"
+
 
 
 app = FastAPI()

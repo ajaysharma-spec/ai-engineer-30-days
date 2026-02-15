@@ -1,9 +1,8 @@
 fastapi
 uvicorn
-chromadb
-sentence-transformers
 pypdf
+chromadb==0.4.24
+sentence-transformers
 requests
-streamlit
 python-multipart
-pydantic>=2.6
+pydantic>=2.5.0
