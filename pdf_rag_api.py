@@ -87,7 +87,4 @@ async def ask(question: str):
 import uvicorn
 import os
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("pdf_rag_api:app", host="0.0.0.0", port=port)
-
+uvicorn pdf_rag_api:app --host 0.0.0.0 --port $PORT
