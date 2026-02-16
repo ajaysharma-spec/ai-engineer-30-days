@@ -84,7 +84,3 @@ async def ask(question: str):
         "answer": answer
     }
 
-import uvicorn
-import os
-
-uvicorn pdf_rag_api:app --host 0.0.0.0 --port $PORT
