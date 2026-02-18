@@ -1,23 +1,25 @@
 from fastapi import FastAPI, UploadFile, File
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
-import chromadb
 import requests
 import os
 
 app = FastAPI()
 
-# Load API Key from ENV (SAFE)
+# 🔐 Load API key safely from Render Environment Variables
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-# Embedding model
+# 📌 Load embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Chroma DB (simple local)
-client = chromadb.Client()
-collection = client.get_or_create_collection("docs")
+# 📦 Simple in-memory storage (Render safe)
+documents = []
+embeddings_store = []
 
 
+# ==============================
+# 🔹 LLM Call (OpenRouter)
+# ==============================
 def call_llm(context, question):
     url = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -31,51 +33,69 @@ def call_llm(context, question):
     payload = {
         "model": "mistralai/mistral-7b-instruct",
         "messages": [
-            {"role": "system", "content": f"Answer using this context:\n{context}"},
-            {"role": "user", "content": question}
+            {
+                "role": "system",
+                "content": f"Answer using this context:\n{context}"
+            },
+            {
+                "role": "user",
+                "content": question
+            }
         ]
     }
 
-    r = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload)
 
-    print("RAW RESPONSE:", r.text)
+    print("RAW RESPONSE:", response.text)
 
-    return r.json()["choices"][0]["message"]["content"]
+    data = response.json()
+
+    if "choices" not in data:
+        return "LLM Error: " + str(data)
+
+    return data["choices"][0]["message"]["content"]
 
 
+# ==============================
+# 🔹 Upload PDF
+# ==============================
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
+
     reader = PdfReader(file.file)
 
     text = ""
     for page in reader.pages:
-        text += page.extract_text()
+        text += page.extract_text() or ""
 
     chunks = text.split("\n")
 
-    embeddings = model.encode(chunks).tolist()
+    embeds = model.encode(chunks).tolist()
 
-    for i, chunk in enumerate(chunks):
-        collection.add(
-            documents=[chunk],
-            embeddings=[embeddings[i]],
-            ids=[str(i)]
-        )
+    documents.extend(chunks)
+    embeddings_store.extend(embeds)
 
-    return {"status": "PDF uploaded & indexed"}
+    return {"status": "PDF uploaded and indexed"}
 
 
+# ==============================
+# 🔹 Ask Question
+# ==============================
 @app.post("/ask")
 async def ask(question: str):
 
-    q_embed = model.encode([question]).tolist()
+    if not documents:
+        return {"error": "No PDF uploaded yet."}
 
-    results = collection.query(
-        query_embeddings=q_embed,
-        n_results=1
-    )
+    q_embed = model.encode([question])[0]
 
-    context = results["documents"][0][0]
+    scores = []
+    for emb in embeddings_store:
+        score = sum(a * b for a, b in zip(q_embed, emb))
+        scores.append(score)
+
+    best_index = scores.index(max(scores))
+    context = documents[best_index]
 
     answer = call_llm(context, question)
 
