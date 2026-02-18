@@ -1,6 +1,4 @@
 fastapi
 uvicorn
 pypdf
-sentence-transformers
 requests
-torch
