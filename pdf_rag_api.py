@@ -4,6 +4,9 @@ import requests
 import os
 
 app = FastAPI()
+@app.get("/")
+def home():
+    return {"status": "PDF RAG API Running"}
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
