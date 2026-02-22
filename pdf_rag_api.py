@@ -112,3 +112,8 @@ async def ask(question: str, x_api_key: str = Header(...)):
 @app.get("/")
 def home():
     return {"status": "PDF RAG API Running"}
+
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
