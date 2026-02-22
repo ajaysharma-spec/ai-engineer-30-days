@@ -2,6 +2,6 @@ fastapi
 uvicorn
 pypdf
 sentence-transformers
+chromadb
 requests
-torch
 python-multipart
