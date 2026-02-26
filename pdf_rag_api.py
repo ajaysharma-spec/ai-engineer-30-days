@@ -1,69 +1,30 @@
-from fastapi import FastAPI, UploadFile, File, Header, HTTPException
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from pypdf import PdfReader
-from sentence_transformers import SentenceTransformer
 import chromadb
-import requests
-import os
+from sentence_transformers import SentenceTransformer
+from pypdf import PdfReader
 
-app = FastAPI(title="PDF RAG API")
-
-# ================= ENV =================
-
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
-API_SECRET = os.getenv("API_SECRET")
-
-# ================= SECURITY =================
-
-def verify_key(x_api_key: str = Header(...)):
-    if x_api_key != API_SECRET:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-# ================= CORS =================
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_headers=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# ================= EMBEDDINGS =================
-
+# Models
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
+# Chroma
 client = chromadb.Client()
-collection = client.get_or_create_collection(name="docs")
+collection = client.get_or_create_collection(name="pdf_rag")
 
-# ================= LLM =================
-
-def call_llm(context, question):
-
-    url = "https://openrouter.ai/api/v1/chat/completions"
-
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "mistralai/mistral-7b-instruct",
-        "messages": [
-            {"role": "system", "content": f"Answer from context:\n{context}"},
-            {"role": "user", "content": question}
-        ]
-    }
-
-    r = requests.post(url, headers=headers, json=payload)
-
-    print("RAW:", r.text)
-
-    return r.json()["choices"][0]["message"]["content"]
-
-# ================= UPLOAD =================
+# -------- PDF UPLOAD --------
 
 @app.post("/upload")
-async def upload(file: UploadFile = File(...)):
+async def upload_pdf(file: UploadFile = File(...)):
 
     reader = PdfReader(file.file)
 
@@ -71,7 +32,8 @@ async def upload(file: UploadFile = File(...)):
     for page in reader.pages:
         text += page.extract_text()
 
-    chunks = text.split("\n")
+    # Simple chunking
+    chunks = [text[i:i+800] for i in range(0, len(text), 800)]
 
     embeds = model.encode(chunks).tolist()
 
@@ -79,17 +41,19 @@ async def upload(file: UploadFile = File(...)):
         collection.add(
             documents=[chunk],
             embeddings=[embeds[i]],
-            ids=[str(i)]
+            ids=[f"{file.filename}_{i}"],
+            metadatas=[{
+                "filename": file.filename,
+                "chunk_id": i
+            }]
         )
 
-    return {"status": "PDF indexed"}
+    return {"status": "pdf running"}
 
-# ================= ASK =================
+# -------- ASK QUESTION --------
 
 @app.post("/ask")
-async def ask(question: str, x_api_key: str = Header(...)):
-
-    verify_key(x_api_key)
+async def ask(question: str):
 
     q_embed = model.encode([question]).tolist()
 
@@ -98,18 +62,10 @@ async def ask(question: str, x_api_key: str = Header(...)):
         n_results=1
     )
 
-    context = results["documents"][0][0]
-
-    answer = call_llm(context, question)
+    answer = results["documents"][0][0]
+    source = results["metadatas"][0][0]
 
     return {
-        "question": question,
-        "answer": answer
+        "answer": answer,
+        "source": source
     }
-
-# ================= ROOT =================
-
-@app.get("/")
-def home():
-    return {"status": "PDF RAG API Running"}
-
