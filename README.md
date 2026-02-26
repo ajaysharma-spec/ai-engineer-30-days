@@ -73,6 +73,48 @@ PDF → Text Extraction → Embeddings → ChromaDB → LLM → Answer
 - Cloud deployment
 - Better chunking
 
+# 📄 PDF RAG System (FastAPI + ChromaDB)
+
+A production-ready Retrieval-Augmented Generation (RAG) system built using FastAPI, SentenceTransformers, and ChromaDB.
+
+This system allows users to upload PDF documents and ask questions based on the document content.
+
+---
+
+## 🚀 Features
+
+- PDF Upload
+- Automatic Text Chunking
+- Embedding Generation (SentenceTransformers)
+- Vector Search (ChromaDB)
+- Metadata-aware Retrieval (filename + chunk_id)
+- FastAPI Backend
+- Swagger API Testing
+
+---
+
+## 🧠 Architecture
+
+PDF → Chunk → Embed → Store (ChromaDB)  
+Question → Embed → Similarity Search → Retrieve → Answer
+
+---
+
+## 🛠 Tech Stack
+
+- FastAPI
+- SentenceTransformers (all-MiniLM-L6-v2)
+- ChromaDB (Vector Database)
+- PyPDF
+- Uvicorn
+
+---
+
+## 📦 Installation
+
+```bash
+pip install fastapi uvicorn chromadb sentence-transformers pypdf
+
 
 ## 👨‍💻 Author
 Ajay Sharma
