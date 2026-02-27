@@ -59,13 +59,21 @@ async def ask(question: str):
 
     results = collection.query(
         query_embeddings=q_embed,
-        n_results=1
+        n_results=3,
+        include=["documents","metadatas","distances"]
+        
     )
 
-    answer = results["documents"][0][0]
-    source = results["metadatas"][0][0]
+    retrieved_chunks = results["documents"][0]
+    retrieved_metadata = results["metadatas"][0]
+    retrieved_scores = results["distances"][0]
+
+    combined_answer = "\n\n".join(retrieved_chunks)
 
     return {
-        "answer": answer,
-        "source": source
+        "answer": combined_answer,
+        "sources": retrieved_metadata,
+        "scores": retrieved_scores
     }
+    
+    
