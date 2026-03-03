@@ -110,11 +110,19 @@ Question → Embed → Similarity Search → Retrieve → Answer
 
 ---
 
+
 ## 📦 Installation
 
 ```bash
 pip install fastapi uvicorn chromadb sentence-transformers pypdf
 
+## 📄 Resume Analyzer API
+
+- Cosine similarity based resume-job match
+- Match percentage + level
+- Skill extraction
+- Missing skill detection
+- FastAPI backend
 
 ## 👨‍💻 Author
 Ajay Sharma
