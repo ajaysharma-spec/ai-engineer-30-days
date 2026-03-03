@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import chromadb
 from sentence_transformers import SentenceTransformer
 from pypdf import PdfReader
+from typing import List
 
 app = FastAPI()
 
@@ -24,31 +25,32 @@ collection = client.get_or_create_collection(name="pdf_rag")
 # -------- PDF UPLOAD --------
 
 @app.post("/upload")
-async def upload_pdf(file: UploadFile = File(...)):
+async def upload_pdf(files: List[UploadFile] = File(...)):
 
-    reader = PdfReader(file.file)
+    for file in files:
 
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text()
+        reader = PdfReader(file.file)
 
-    # Simple chunking
-    chunks = [text[i:i+800] for i in range(0, len(text), 800)]
+        text = ""
+        for page in reader.pages:
+            if page.extract_text():
+                text += page.extract_text()
 
-    embeds = model.encode(chunks).tolist()
+        chunks = [text[i:i+800] for i in range(0, len(text), 800)]
+        embeds = model.encode(chunks).tolist()
 
-    for i, chunk in enumerate(chunks):
-        collection.add(
-            documents=[chunk],
-            embeddings=[embeds[i]],
-            ids=[f"{file.filename}_{i}"],
-            metadatas=[{
-                "filename": file.filename,
-                "chunk_id": i
-            }]
-        )
+        for i, chunk in enumerate(chunks):
+            collection.add(
+                documents=[chunk],
+                embeddings=[embeds[i]],
+                ids=[f"{file.filename}_{i}"],
+                metadatas=[{
+                    "filename": file.filename,
+                    "chunk_id": i
+                }]
+            )
 
-    return {"status": "pdf running"}
+    return {"status": "multiple pdfs uploaded"}
 
 # -------- ASK QUESTION --------
 
