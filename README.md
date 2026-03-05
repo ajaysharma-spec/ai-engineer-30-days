@@ -160,17 +160,13 @@ Missing Skills Analysis
 ↓  
 AI Feedback Generation
 
-### Screenshots
+## 📸 Project Screenshots
 
-#### FastAPI Swagger
+### 🖥 Streamlit Chat UI
+![Swagger UI](swagger2.png)
 
-![Swagger API](swagger2.png)
-
-#### Resume Analysis Result
-
-![Analysis Result](result.png)
-
-![Analysis Result 2](result2.png)
+### 📑 Swagger API Docs
+![Swagger UI](result2.png)
 
 ## 👨‍💻 Author
 Ajay Sharma
