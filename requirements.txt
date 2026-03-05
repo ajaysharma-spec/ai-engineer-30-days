@@ -1,7 +1,7 @@
 fastapi
 uvicorn
-pypdf
 sentence-transformers
-chromadb
+pypdf
+numpy
 requests
 python-multipart
