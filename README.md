@@ -115,7 +115,7 @@ Question → Embed → Similarity Search → Retrieve → Answer
 
 ```bash
 pip install fastapi uvicorn chromadb sentence-transformers pypdf
-
+```
 ## 📄 Resume Analyzer API
 
 - Cosine similarity based resume-job match
@@ -126,16 +126,14 @@ pip install fastapi uvicorn chromadb sentence-transformers pypdf
 
 ## AI Resume Analyzer
 
-An AI-powered Resume Analyzer built using FastAPI and SentenceTransformers.  
-The system compares a resume with a job description and provides intelligent feedback.
+An AI-powered Resume Analyzer built with FastAPI and SentenceTransformers.
 
-### Features
+This system analyzes a resume against a job description and provides:
 
-- Resume PDF parsing
-- Cosine similarity score between resume and job description
-- Automatic skill extraction
+- Resume-job match percentage
+- Skill extraction
 - Missing skill detection
-- AI-powered resume improvement feedback using LLM
+- AI-powered resume improvement suggestions
 
 ### Tech Stack
 
@@ -146,7 +144,7 @@ The system compares a resume with a job description and provides intelligent fee
 - PyPDF
 - OpenRouter LLM API
 
-### How it Works
+### How It Works
 
 Resume PDF  
 ↓  
@@ -164,14 +162,15 @@ AI Feedback Generation
 
 ### Screenshots
 
-#### API Endpoint (FastAPI Swagger)
+#### FastAPI Swagger
 
-![Swagger API](screenshot(109).png)
+![Swagger API](swagger2.png)
 
 #### Resume Analysis Result
 
-![Analysis Result](screenshot(110).png)
-![Analysis Result](screenshot(111).png)
+![Analysis Result](result.png)
+
+![Analysis Result 2](result2.png)
 
 ## 👨‍💻 Author
 Ajay Sharma
