@@ -124,5 +124,54 @@ pip install fastapi uvicorn chromadb sentence-transformers pypdf
 - Missing skill detection
 - FastAPI backend
 
+## AI Resume Analyzer
+
+An AI-powered Resume Analyzer built using FastAPI and SentenceTransformers.  
+The system compares a resume with a job description and provides intelligent feedback.
+
+### Features
+
+- Resume PDF parsing
+- Cosine similarity score between resume and job description
+- Automatic skill extraction
+- Missing skill detection
+- AI-powered resume improvement feedback using LLM
+
+### Tech Stack
+
+- Python
+- FastAPI
+- SentenceTransformers
+- NumPy
+- PyPDF
+- OpenRouter LLM API
+
+### How it Works
+
+Resume PDF  
+↓  
+Text Extraction  
+↓  
+Embedding Generation  
+↓  
+Cosine Similarity Calculation  
+↓  
+Skill Detection  
+↓  
+Missing Skills Analysis  
+↓  
+AI Feedback Generation
+
+### Screenshots
+
+#### API Endpoint (FastAPI Swagger)
+
+![Swagger API](screenshot(109).png)
+
+#### Resume Analysis Result
+
+![Analysis Result](screenshot(110).png)
+![Analysis Result](screenshot(111).png)
+
 ## 👨‍💻 Author
 Ajay Sharma
