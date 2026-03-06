@@ -163,10 +163,17 @@ AI Feedback Generation
 ## 📸 Project Screenshots
 
 ### 🖥 Streamlit Chat UI
-![Swagger UI](swagger2.png)
+![Streamlit UI](screenshots/streamlit.png)
 
 ### 📑 Swagger API Docs
-![Swagger UI](result2.png)
+![Swagger UI](screenshots/swagger.png)
 
+### 📄 Resume Analyzer Swagger
+![Swagger API](screenshots/swagger2.png)
+
+### 📊 Resume Analysis Result
+![Result](screenshots/result.png)
+
+![Result 2](screenshots/result2.png)
 ## 👨‍💻 Author
 Ajay Sharma
