@@ -175,5 +175,50 @@ AI Feedback Generation
 ![Result](screenshots/result.png)
 
 ![Result 2](screenshots/result2.png)
+
+
+
+## AI Chatbot with Memory
+
+A conversational AI chatbot built using FastAPI and OpenRouter.
+
+The chatbot maintains conversation history and generates contextual responses using an LLM.
+
+### Features
+
+- Conversational AI chatbot
+- Context-aware responses
+- Conversation memory
+- FastAPI backend API
+- Streamlit chat UI
+
+### Tech Stack
+
+- Python
+- FastAPI
+- OpenRouter API
+- Streamlit
+- Requests
+
+### System Workflow
+
+User Message  
+↓  
+FastAPI Endpoint  
+↓  
+Chat History Memory  
+↓  
+LLM (OpenRouter)  
+↓  
+Response Generated  
+↓  
+Displayed in Chat UI
+
+### Chat Interface
+
+![Chat UI](screenshots/chat ui.png)
+
+
+
 ## 👨‍💻 Author
 Ajay Sharma
