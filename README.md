@@ -216,7 +216,7 @@ Displayed in Chat UI
 
 ### Chat Interface
 
-![Chat UI](screenshots/chat ui.png)
+![Chat UI](screenshots/chat_ui.png)
 
 
 
