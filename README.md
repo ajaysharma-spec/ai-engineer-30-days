@@ -218,6 +218,15 @@ Displayed in Chat UI
 
 ![Chat UI](screenshots/chat_ui.png)
 
+## LangChain Experiments
+
+Basic LangChain experiments demonstrating:
+
+- Prompt templates
+- LLM invocation
+- Tool integration
+- Agent concepts
+
 
 
 ## 👨‍💻 Author
