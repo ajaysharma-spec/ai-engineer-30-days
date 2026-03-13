@@ -4,7 +4,7 @@ from langchain_core.tools import tool
 # LLM setup
 llm = ChatOpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="YOUR_API_KEY",
     model="openrouter/auto"
 )
 
