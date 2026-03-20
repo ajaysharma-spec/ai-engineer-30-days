@@ -1,36 +1,76 @@
-import requests
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File
+import os
 
-API_KEY = "YOUR_API_KEY"
-
+from pypdf import PdfReader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 app = FastAPI()
 
-class PredictRequest(BaseModel):
-    text: str
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@app.post("/predict")
-def predict(req: PredictRequest):
+# Global DB
+db = None
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
+# Embedding model
+embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-    headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost",
-        "X-Title": "ai-engineer-roadmap"
-    }
+# Extract text
+def extract_text(file_path):
+    reader = PdfReader(file_path)
+    text = ""
+    for page in reader.pages:
+        content = page.extract_text()
+        if content:
+            text += content
+    return text
 
-    data = {
-        "model": "mistralai/mistral-7b-instruct",
-        "messages": [
-            {"role": "user", "content": req.text}
-        ]
-    }
+# Chunk text (FIXED)
+def chunk_text(text):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=100
+    )
+    chunks = splitter.split_text(text)
 
-    response = requests.post(url, headers=headers, json=data)
+    # Clean chunks
+    chunks = [c.strip() for c in chunks if c.strip()]
+
+    return chunks
+
+# Upload API
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File(...)):
+    global db
+
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+
+    with open(file_path, "wb") as f:
+        f.write(await file.read())
+
+    text = extract_text(file_path)
+
+    print("Text length:", len(text))
+
+    if not text or not text.strip():
+        return {"error": "No readable text found"}
+
+    chunks = chunk_text(text)
+
+    print("Chunks count:", len(chunks))
+
+    if chunks:
+        print("First chunk:", chunks[0])
+
+    if not chunks:
+        return {"error": "No chunks created"}
+
+    db = Chroma.from_texts(chunks, embedding)
 
     return {
-        "answer": response.json()["choices"][0]["message"]["content"]
+        "message": "PDF processed successfully",
+        "chunks": len(chunks),
+        "sample_chunk": chunks[0] if chunks else ""
     }

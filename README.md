@@ -99,6 +99,33 @@ PDF → Chunk → Embed → Store (ChromaDB)
 Question → Embed → Similarity Search → Retrieve → Answer
 
 ---
+---
+
+## 🤖 Hugging Face (Embeddings)
+
+This project uses Hugging Face models to generate embeddings for text.
+
+### What is Hugging Face?
+Hugging Face is a platform that provides pre-trained AI models.  
+In this project, it is used to convert text into numerical vectors (embeddings).
+
+### Why Embeddings?
+- Convert text → numbers
+- Capture semantic meaning
+- Enable similarity search in vector databases
+
+### Model Used
+- all-MiniLM-L6-v2 (SentenceTransformers)
+
+### Example
+
+Text:
+"AI is powerful"
+
+Converted to:
+[0.12, -0.45, 0.89, ...]
+
+These embeddings are stored in ChromaDB and used for retrieval in the RAG system.
 
 ## 🛠 Tech Stack
 
@@ -169,13 +196,21 @@ AI Feedback Generation
 ![Swagger UI](screenshots/swagger.png)
 
 ### 📄 Resume Analyzer Swagger
-![Swagger API](screenshots/swagger2.png)
+![Swagger API](screenshots/swaggger.png)
 
 ### 📊 Resume Analysis Result
 ![Result](screenshots/result.png)
 
 ![Result 2](screenshots/result2.png)
 
+### 📑 Swagger API Docs
+![Swagger UI](screenshots/swagger2.png)
+
+### 📤 PDF Upload Response
+![Upload](screenshots/upload.png)
+
+### 💬 Chat Output
+![Chat](screenshots/chat.png)
 
 
 ## AI Chatbot with Memory

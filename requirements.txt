@@ -1,7 +1,10 @@
 fastapi
 uvicorn
+langchain
+chromadb
 sentence-transformers
 pypdf
 numpy
 requests
 python-multipart
+python-dotenv
