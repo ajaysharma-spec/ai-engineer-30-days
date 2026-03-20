@@ -204,7 +204,7 @@ AI Feedback Generation
 ![Result 2](screenshots/result2.png)
 
 ### 📑 Swagger API Docs
-![Swagger UI](screenshots/swagger2.png)
+![Swagger UI](screenshots/swaggger.png)
 
 ### 📤 PDF Upload Response
 ![Upload](screenshots/upload.png)
