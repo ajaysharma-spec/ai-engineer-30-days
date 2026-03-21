@@ -5,19 +5,18 @@ from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from openai import OpenAI
 
 app = FastAPI()
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Global DB
 db = None
 
-# Embedding model
 embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-# Extract text
+# 🔹 Extract text
 def extract_text(file_path):
     reader = PdfReader(file_path)
     text = ""
@@ -27,20 +26,17 @@ def extract_text(file_path):
             text += content
     return text
 
-# Chunk text (FIXED)
+# 🔹 Chunk text
 def chunk_text(text):
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=100
     )
     chunks = splitter.split_text(text)
-
-    # Clean chunks
     chunks = [c.strip() for c in chunks if c.strip()]
-
     return chunks
 
-# Upload API
+# 🔹 Upload API
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
     global db
@@ -52,17 +48,10 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     text = extract_text(file_path)
 
-    print("Text length:", len(text))
-
     if not text or not text.strip():
         return {"error": "No readable text found"}
 
     chunks = chunk_text(text)
-
-    print("Chunks count:", len(chunks))
-
-    if chunks:
-        print("First chunk:", chunks[0])
 
     if not chunks:
         return {"error": "No chunks created"}
@@ -71,6 +60,44 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     return {
         "message": "PDF processed successfully",
-        "chunks": len(chunks),
-        "sample_chunk": chunks[0] if chunks else ""
+        "chunks": len(chunks)
+    }
+
+# 🔹 Ask API (FINAL WORKING)
+@app.post("/ask")
+async def ask_question(query: str):
+    global db
+
+    if db is None:
+        return {"error": "Upload PDF first"}
+
+    docs = db.similarity_search(query, k=3)
+    context = "\n".join([doc.page_content for doc in docs])
+
+    prompt = f"""
+    Answer based only on this context:
+
+    {context}
+
+    Question: {query}
+    """
+
+    # 🔥 DIRECT KEY (NO ENV ISSUE)
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key="your api key"
+    )
+
+    response = client.chat.completions.create(
+        model="openai/gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    answer = response.choices[0].message.content
+
+    return {
+        "question": query,
+        "answer": answer
     }
