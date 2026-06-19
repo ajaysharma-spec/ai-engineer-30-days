@@ -3,21 +3,26 @@ import requests
 
 st.title("PDF RAG Chat")
 
+# Upload PDF
 uploaded = st.file_uploader("Upload PDF")
 
 if uploaded:
-    r = requests.post(
+    res = requests.post(
         "http://127.0.0.1:8000/upload",
-        files={"file": uploaded}
+        files={"files": uploaded}
     )
-    st.success("PDF Uploaded & Indexed")
+    st.write(res.json())
 
+# Ask question
 question = st.text_input("Ask question")
 
 if st.button("Ask"):
     res = requests.post(
-        "http://127.0.0.1:8000/ask",
-        params={"question": question}
+        "http://127.0.0.1:8000/ask?question=" + question
     )
 
-    st.write(res.json()["answer"])
+    data = res.json()
+    st.write(data)
+
+    if "answer" in data:
+        st.write("Answer:", data["answer"])

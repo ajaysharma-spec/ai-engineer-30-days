@@ -85,7 +85,7 @@ async def ask_question(query: str):
     # 🔥 DIRECT KEY (NO ENV ISSUE)
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="your api key"
+        api_key="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"
     )
 
     response = client.chat.completions.create(

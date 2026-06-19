@@ -143,6 +143,21 @@ These embeddings are stored in ChromaDB and used for retrieval in the RAG system
 ```bash
 pip install fastapi uvicorn chromadb sentence-transformers pypdf
 ```
+
+Challenges Faced
+
+Challenges:
+- Managing chunk size for accurate retrieval
+- Reducing irrelevant search results
+- Handling API integration and environment variable issues
+
+Key Learnings
+
+Learnings:
+- Practical understanding of RAG pipelines
+- Embeddings and vector search workflows
+- Importance of chunking and retrieval quality
+
 ## 📄 Resume Analyzer API
 
 - Cosine similarity based resume-job match
@@ -161,6 +176,10 @@ This system analyzes a resume against a job description and provides:
 - Skill extraction
 - Missing skill detection
 - AI-powered resume improvement suggestions
+
+Problem Statement:
+
+Recruiters manually compare resumes with job descriptions. This project automates resume screening using embeddings and semantic similarity.
 
 ### Tech Stack
 
@@ -219,6 +238,12 @@ A conversational AI chatbot built using FastAPI and OpenRouter.
 
 The chatbot maintains conversation history and generates contextual responses using an LLM.
 
+Challenge:
+Maintaining conversation context across multiple interactions.
+
+Learning:
+Understanding conversational memory and context management in LLM applications.
+
 ### Features
 
 - Conversational AI chatbot
@@ -257,10 +282,14 @@ Displayed in Chat UI
 
 Basic LangChain experiments demonstrating:
 
-- Prompt templates
-- LLM invocation
-- Tool integration
-- Agent concepts
+LangChain Experiments
+
+Basic LangChain experiments demonstrating:
+
+- Prompt Templates
+- LLM Chains
+- Tool Integration
+- Agent Concepts
 
 
 

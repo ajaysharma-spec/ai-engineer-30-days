@@ -4,7 +4,7 @@ import requests
 
 app = FastAPI()
 
-OPENROUTER_API_KEY = "OPENROUTER API KEY"
+OPENROUTER_API_KEY ="API KEY"
 
 # conversation memory
 chat_history = []
@@ -34,6 +34,9 @@ def chat(req: ChatRequest):
     )
 
     result = response.json()
+
+    if "choices" not in result:
+        return {"reply": "Error: " + str(result)}
 
     answer = result["choices"][0]["message"]["content"]
 

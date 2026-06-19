@@ -25,7 +25,7 @@ COMMON_SKILLS = [
 # -----------------------------
 # API Key (use environment variable)
 # -----------------------------
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEYgit reset --soft 53d0f70")
 
 
 # -----------------------------

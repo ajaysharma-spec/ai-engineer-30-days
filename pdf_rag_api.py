@@ -19,7 +19,7 @@ app.add_middleware(
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Chroma
-client = chromadb.Client()
+client = chromadb.PersistentClient(path="./chroma_db")
 collection = client.get_or_create_collection(name="pdf_rag")
 
 # -------- PDF UPLOAD --------
@@ -36,7 +36,12 @@ async def upload_pdf(files: List[UploadFile] = File(...)):
             if page.extract_text():
                 text += page.extract_text()
 
-        chunks = [text[i:i+800] for i in range(0, len(text), 800)]
+        # skip empty pdf
+        if not text.strip():
+            continue
+
+        # chunking with overlap
+        chunks = [text[i:i+800] for i in range(0, len(text), 600)]
         embeds = model.encode(chunks).tolist()
 
         for i, chunk in enumerate(chunks):
@@ -50,7 +55,7 @@ async def upload_pdf(files: List[UploadFile] = File(...)):
                 }]
             )
 
-    return {"status": "multiple pdfs uploaded"}
+    return {"status": "multiple pdfs uploaded successfully"}
 
 # -------- ASK QUESTION --------
 
@@ -62,20 +67,18 @@ async def ask(question: str):
     results = collection.query(
         query_embeddings=q_embed,
         n_results=3,
-        include=["documents","metadatas","distances"]
-        
+        include=["documents", "metadatas", "distances"]
     )
 
     retrieved_chunks = results["documents"][0]
-    retrieved_metadata = results["metadatas"][0]
-    retrieved_scores = results["distances"][0]
+
+    # debug (important)
+    print("Retrieved chunks:", retrieved_chunks)
 
     combined_answer = "\n\n".join(retrieved_chunks)
 
     return {
         "answer": combined_answer,
-        "sources": retrieved_metadata,
-        "scores": retrieved_scores
+        "sources": results["metadatas"][0],
+        "scores": results["distances"][0]
     }
-    
-    
